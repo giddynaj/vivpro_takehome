@@ -24,9 +24,16 @@ async def initialize():
 
 @app.get("/playlists")
 async def get_playlists(
-    title: str | None = None
+    title: str | None = None,
+    limit: int | None = 10,
+    page: int | None = 0
 ):
-    df_prep = df[df['title'] == title]
-    #df_prep = df.iloc[0:10]
+    if (title):
+        df_prep = df[df['title'] == title]
+    else:
+        skip = (page - 1) * 10
+        df_prep = df.iloc[skip:limit + skip]
+        #TODO: Default sort, other sort is implemented client side
+        df_prep = df_prep.sort_values(by='title', ascending=True)
     df_json = df_prep.to_json(orient='records')
-    return { "status": "ok", "json": df_json}
+    return { "status": "ok", "title": title, "json": df_json}
