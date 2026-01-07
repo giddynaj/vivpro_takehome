@@ -23,6 +23,13 @@ type playlistType = {
 
 function PlaylistTable() {
   const [playlists, setPlayLists] = useState([]);
+  const [sortConfig, setSortConfig] = useState<{
+    key: string | null;
+    direction: "asc" | "desc";
+  }>({
+    key: null,
+    direction: "asc",
+  });
 
   useEffect(() => {
     const fetchPlaylists = async () => {
@@ -44,29 +51,47 @@ function PlaylistTable() {
 
   //if (loading) return <p>Loading...</p>
 
+  //Factor out to separate module
+  const sortBy = (key: string) => {
+    let direction: "asc" | "desc" = "asc";
+
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+
+    const sortedData = [...playlists].sort((a, b) => {
+      if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
+      if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    setSortConfig({ key, direction });
+    setPlayLists(sortedData);
+  };
+
   return (
     <>
       <table>
         <thead>
           <tr>
             <th>ID</th>
-            <th>Title</th>
-            <th>Danceability</th>
-            <th>Energy</th>
-            <th>Key</th>
-            <th>Loudness</th>
-            <th>Mode</th>
-            <th>Acousticness</th>
-            <th>Instrumentalness</th>
-            <th>Liveness</th>
-            <th>Valence</th>
-            <th>Tempo</th>
-            <th>Duration(ms)</th>
-            <th>Time Signature</th>
-            <th>Number Bars</th>
-            <th>Number Sections</th>
-            <th>Number Segments</th>
-            <th>Class</th>
+            <th onClick={() => sortBy("title")}>Title</th>
+            <th onClick={() => sortBy("danceability")}>Danceability</th>
+            <th onClick={() => sortBy("energy")}>Energy</th>
+            <th onClick={() => sortBy("key")}>Key</th>
+            <th onClick={() => sortBy("loudness")}>Loudness</th>
+            <th onClick={() => sortBy("mode")}>Mode</th>
+            <th onClick={() => sortBy("acousticness")}>Acousticness</th>
+            <th onClick={() => sortBy("instrumentalness")}>Instrumentalness</th>
+            <th onClick={() => sortBy("liveness")}>Liveness</th>
+            <th onClick={() => sortBy("valence")}>Valence</th>
+            <th onClick={() => sortBy("tempo")}>Tempo</th>
+            <th onClick={() => sortBy("duration")}>Duration(ms)</th>
+            <th onClick={() => sortBy("time_signature")}>Time Signature</th>
+            <th onClick={() => sortBy("num_bars")}>Number Bars</th>
+            <th onClick={() => sortBy("num_sections")}>Number Sections</th>
+            <th onClick={() => sortBy("num_segments")}>Number Segments</th>
+            <th onClick={() => sortBy("class")}>Class</th>
           </tr>
         </thead>
         <tbody>
