@@ -26,7 +26,7 @@ async def initialize():
 async def get_playlists(
     title: str | None = None,
     limit: int | None = 10,
-    page: int | None = 0
+    page: int | None = 1
 ):
     if (title):
         df_prep = df[df['title'] == title]
