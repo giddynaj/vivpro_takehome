@@ -23,7 +23,10 @@ async def initialize():
     return { "status": "ok"}
 
 @app.get("/playlists")
-async def get_playlists():
-    df_prep = df.iloc[0:10]
+async def get_playlists(
+    title: str | None = None
+):
+    df_prep = df[df['title'] == title]
+    #df_prep = df.iloc[0:10]
     df_json = df_prep.to_json(orient='records')
     return { "status": "ok", "json": df_json}
