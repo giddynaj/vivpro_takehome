@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import PaginatedBlock from "./PaginationBlock";
+import PlaylistSearch from "./PlaylistSearch";
 
 type playlistType = {
   id: string;
@@ -27,7 +28,7 @@ function PlaylistTable() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 10;
-  //const [title, setTitle] = useState(null);
+  const [title, setTitle] = useState(null);
   const [sortConfig, setSortConfig] = useState<{
     key: string | null;
     direction: "asc" | "desc";
@@ -39,9 +40,9 @@ function PlaylistTable() {
   useEffect(() => {
     const fetchPlaylists = async () => {
       try {
-        //const titleFrag = title ? `&title=${title}` : "";
+        const titleFrag = title ? `&title=${title}` : "";
         const response = await fetch(
-          `http://localhost:8000/playlists?page=${page}`
+          `http://localhost:8000/playlists?page=${page}${titleFrag}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch playlists");
@@ -57,7 +58,7 @@ function PlaylistTable() {
     };
 
     fetchPlaylists();
-  }, [page]);
+  }, [page, title]);
 
   //if (loading) return <p>Loading...</p>
 
@@ -130,6 +131,7 @@ function PlaylistTable() {
         </tbody>
       </table>
       <PaginatedBlock page={page} totalpages={totalPages} setpage={setPage} />
+      <PlaylistSearch settitle={setTitle} title={title} />
     </>
   );
 }
