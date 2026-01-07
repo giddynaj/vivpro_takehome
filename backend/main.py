@@ -21,3 +21,9 @@ df = pd.read_json('./playlist.json')
 async def initialize():
     print(df.transpose())
     return { "status": "ok"}
+
+@app.get("/playlists")
+async def get_playlists():
+    df_prep = df.iloc[0:10]
+    df_json = df_prep.to_json(orient='records')
+    return { "status": "ok", "json": df_json}
