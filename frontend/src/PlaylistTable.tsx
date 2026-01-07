@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PaginatedBlock from "./PaginationBlock";
 
 type playlistType = {
   id: string;
@@ -23,6 +24,10 @@ type playlistType = {
 
 function PlaylistTable() {
   const [playlists, setPlayLists] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const pageSize = 10;
+  //const [title, setTitle] = useState(null);
   const [sortConfig, setSortConfig] = useState<{
     key: string | null;
     direction: "asc" | "desc";
@@ -34,12 +39,17 @@ function PlaylistTable() {
   useEffect(() => {
     const fetchPlaylists = async () => {
       try {
-        const response = await fetch("http://localhost:8000/playlists");
+        //const titleFrag = title ? `&title=${title}` : "";
+        const response = await fetch(
+          `http://localhost:8000/playlists?page=${page}`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch playlists");
         }
         const data = await response.json();
         const parsed = JSON.parse(data.json);
+        const rawTotalPages = Math.floor((data.totalCount ?? 1) / pageSize);
+        setTotalPages(rawTotalPages);
         setPlayLists(parsed);
       } finally {
         //
@@ -47,7 +57,7 @@ function PlaylistTable() {
     };
 
     fetchPlaylists();
-  }, []);
+  }, [page]);
 
   //if (loading) return <p>Loading...</p>
 
@@ -119,6 +129,7 @@ function PlaylistTable() {
           ))}
         </tbody>
       </table>
+      <PaginatedBlock page={page} totalpages={totalPages} setpage={setPage} />
     </>
   );
 }

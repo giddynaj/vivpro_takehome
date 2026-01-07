@@ -36,4 +36,4 @@ async def get_playlists(
         #TODO: Default sort, other sort is implemented client side
         df_prep = df_prep.sort_values(by='title', ascending=True)
     df_json = df_prep.to_json(orient='records')
-    return { "status": "ok", "title": title, "json": df_json}
+    return { "status": "ok", "title": title, "totalCount": 100, "json": df_json}
