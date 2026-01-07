@@ -5,3 +5,11 @@ uvicorn main:app --reload --host localhost
 
 pip install -r requirements.txt
 Python 3.13
+
+Example calls:
+http://localhost:8000/playlists
+http://localhost:8000/playlists?page=1
+http://localhost:8000/playlists?page=1&title=3AM
+
+Run Frontend:
+npm run dev
